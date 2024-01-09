@@ -54,6 +54,12 @@ await setColour(deviceToken, '#FF00FF'); // Sets the colour for colour smart bul
 await turnOff(deviceToken);
 ```
 
+Get Sensors connected to a H100 hub
+
+```ts
+await getChildDeviceList(deviceToken);
+```
+
 #### Availble Preset Colours
 
 ||

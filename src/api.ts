@@ -5,7 +5,7 @@ import { getColour } from './colour-helper';
 import { resolveMacToIp } from './network-tools';
 import tplinkCaCert from "./tplink-ca-cert";
 import { base64Decode, base64Encode, decrypt, encrypt, generateKeyPair, readDeviceKey, shaDigest } from "./tplinkCipher";
-import { TapoDevice, TapoDeviceInfo, TapoDeviceKey, TapoVideo, TapoVideoImage, TapoVideoList, TapoVideoPageItem } from "./types";
+import { TapoDevice, TapoDeviceInfo, TapoDeviceChildList, TapoDeviceKey, TapoVideo, TapoVideoImage, TapoVideoList, TapoVideoPageItem } from "./types";
 
 // another variant is https://n-euw1-wap-gw.tplinkcloud.com
 const baseUrl = 'https://eu-wap.tplinkcloud.com/'
@@ -25,6 +25,7 @@ export {
   TapoDevice,
   TapoDeviceKey,
   TapoDeviceInfo,
+  TapoDeviceChildList,
   TapoVideoImage,
   TapoVideoPageItem,
   TapoVideoList,
@@ -165,6 +166,13 @@ export const getDeviceInfo = async (deviceKey: TapoDeviceKey): Promise<TapoDevic
   return augmentTapoDeviceInfo(await securePassthrough(statusRequest, deviceKey))
 }
 
+export const getChildDeviceList = async (deviceKey: TapoDeviceKey): Promise<TapoDeviceChildList> => {
+  const statusRequest = {
+    "method": "get_child_device_list"
+  }
+  return await securePassthrough(statusRequest, deviceKey)
+}
+
 export const getEnergyUsage = async (deviceKey: TapoDeviceKey): Promise<TapoDeviceInfo> => {
   const statusRequest = {
     "method": "get_energy_usage"
@@ -256,6 +264,7 @@ export const isTapoDevice = (deviceType: string) => {
   switch (deviceType) {
     case 'SMART.TAPOPLUG':
     case 'SMART.TAPOBULB':
+    case 'SMART.TAPOHUB':
     case 'SMART.IPCAMERA':
     return true
     default: return false
